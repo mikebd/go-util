@@ -40,6 +40,6 @@ func IsBehindRemote(remote string, branch string, globalOptions ...GlobalOptions
 	return shell.IsOutputGreaterThanZero(output), nil
 }
 
-func git(globalOptions []GlobalOptions, commandOptions ...string) *exec.Cmd {
-	return exec.Command("git", options(globalOptions, commandOptions...)...)
+func git(globalOptions []GlobalOptions, commandAndOptions ...string) *exec.Cmd {
+	return exec.Command("git", options(globalOptions, commandAndOptions...)...)
 }
