@@ -1,19 +1,26 @@
 package git
 
-import (
-	"os"
-	"path/filepath"
-)
-
 const gitDirBase = ".git"
 
-// GlobalOptions are options that apply to all git commands.
+// GlobalOptions are options that apply to all git CLI commands.
 // An instance of GlobalOptions may optionally be passed to each git command as the final argument.
 type GlobalOptions struct {
+	// AsIfIn directs git to operate as if it were run from the specified directory instead of the
+	// current working directory.  i.e. the -C <path> option to the git CLI.
+	AsIfIn string
+
 	// GitDir is the path to the .git directory or its parent directory.
 	// i.e. a repository working directory that contains a .git directory may be provided instead
 	// of the .git directory.
 	GitDir string
+}
+
+func (g GlobalOptions) appendAsIfIn(options []string) []string {
+	if len(g.AsIfIn) == 0 {
+		return options
+	}
+
+	return append(options, "-C", g.AsIfIn)
 }
 
 func (g GlobalOptions) appendGitDir(options []string) []string {
@@ -21,31 +28,27 @@ func (g GlobalOptions) appendGitDir(options []string) []string {
 		return options
 	}
 
-	gitDir := g.GitDir
-	if filepath.Base(gitDir) != gitDirBase {
-		// gitDir may be the repository working directory, that contains the .git directory
-		repoDirGitDir := filepath.Join(gitDir, gitDirBase)
-		fileInfo, err := os.Stat(repoDirGitDir)
-		if err == nil && fileInfo.IsDir() {
-			gitDir = repoDirGitDir
-		}
-		// otherwise assume gitDir is a .git directory
-	}
-	return append(options, "--git-dir="+filepath.Clean(gitDir))
+	return append(options, "--git-dir="+g.GitDir)
 }
 
+// count returns the number of global options that will be added to the git CLI command.
 func (g GlobalOptions) count() int {
 	result := 0
 
+	if len(g.AsIfIn) > 0 {
+		result += 2 // -C <path>
+	}
+
 	if len(g.GitDir) > 0 {
-		result++
+		result++ // --git-dir=<path>
 	}
 
 	return result
 }
 
+// empty returns true if there are no global options to be added to the git CLI command.
 func (g GlobalOptions) empty() bool {
-	return len(g.GitDir) == 0
+	return len(g.AsIfIn)+len(g.GitDir) == 0
 }
 
 // options is a helper function that prepends any global options to the command options.
@@ -60,6 +63,7 @@ func options(globalOptions []GlobalOptions, commandOptions ...string) []string {
 	}
 
 	result := make([]string, 0, g.count()+len(commandOptions))
+	result = g.appendAsIfIn(result)
 	result = g.appendGitDir(result)
 
 	return append(result, commandOptions...)

@@ -16,13 +16,22 @@ func TestCurrentBranchName(t *testing.T) {
 		wantErr bool
 	}{
 		// Should always fail:
-		{"gitDir=.", args{[]GlobalOptions{{GitDir: "."}}}, "master", true},
+		{"GitDir=.", args{[]GlobalOptions{{GitDir: "."}}}, "master", true},
+		{"GitDir=../../", args{[]GlobalOptions{{GitDir: "../../"}}}, "master", true},
 
 		// Should always succeed when the current branch is master:
 		{"no global options", args{}, "master", false},
 		{"empty global options", args{[]GlobalOptions{}}, "master", false},
-		{"gitDir=../../", args{[]GlobalOptions{{GitDir: "../../"}}}, "master", false},
-		{"gitDir=../../.git", args{[]GlobalOptions{{GitDir: "../../.git"}}}, "master", false},
+		{"AsIfIn=.", args{[]GlobalOptions{{AsIfIn: "."}}}, "master", false},
+		{"AsIfIn=..", args{[]GlobalOptions{{AsIfIn: ".."}}}, "master", false},
+		{"AsIfIn=../..", args{[]GlobalOptions{{AsIfIn: "../.."}}}, "master", false},
+		{"GitDir=../../.git", args{[]GlobalOptions{{GitDir: "../../.git"}}}, "master", false},
+		{
+			"AsIfIn=.. GitDir=../.git",
+			args{[]GlobalOptions{{AsIfIn: "..", GitDir: "../.git"}}},
+			"master",
+			false,
+		},
 
 		// Exploratory tests - do not commit these uncommented, not portable:
 		// {"gitDir=fully qualified ./", args{[]GlobalOptions{{GitDir: "/Users/michael.ben-david/mikebd/go-util"}}}, "master", false},
