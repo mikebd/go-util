@@ -1,13 +1,14 @@
 package git
 
-const gitDirBase = ".git"
-
 // GlobalOptions are options that apply to all git CLI commands.
 // An instance of GlobalOptions may optionally be passed to each git command as the final argument.
 type GlobalOptions struct {
 	// AsIfIn directs git to operate as if it were run from the specified directory instead of the
 	// current working directory.  i.e. the -C <path> option to the git CLI.
 	AsIfIn string
+
+	// Log directs the code in this package to log its actions.  It is not passed the git CLI.
+	Log bool
 
 	// GitDir is the path to the .git directory or its parent directory.
 	// i.e. a repository working directory that contains a .git directory may be provided instead

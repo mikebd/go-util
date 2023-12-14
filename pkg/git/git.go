@@ -2,6 +2,8 @@ package git
 
 import (
 	"github.com/mikebd/go-util/pkg/shell"
+	"log"
+	"os"
 	"os/exec"
 )
 
@@ -41,5 +43,15 @@ func IsBehindRemote(remote string, branch string, globalOptions ...GlobalOptions
 }
 
 func git(globalOptions []GlobalOptions, commandAndOptions ...string) *exec.Cmd {
-	return exec.Command("git", options(globalOptions, commandAndOptions...)...)
+	gitOptions := options(globalOptions, commandAndOptions...)
+
+	if len(globalOptions) > 0 && globalOptions[0].Log {
+		pwd, err := os.Getwd()
+		if err != nil {
+			pwd = "[error getting pwd]"
+		}
+		log.Println(pwd, ": git", gitOptions)
+	}
+
+	return exec.Command("git", gitOptions...)
 }
