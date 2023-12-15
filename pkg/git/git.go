@@ -34,8 +34,11 @@ func IsBehindRemote(remote string, branch string, globalOptions ...GlobalOptions
 	}
 
 	cmd := git(globalOptions, "rev-list", "--count", branch+".."+remote+"/"+branch)
-	output, err := cmd.Output()
+	output, err := cmd.CombinedOutput()
 	if err != nil {
+		if len(globalOptions) > 0 && globalOptions[0].Log {
+			log.Println("IsBehindRemote error:", err, string(output))
+		}
 		return false, err
 	}
 
