@@ -1,6 +1,6 @@
 package collection
 
-// Stack is a generic non thread-safe stack implementation.
+// Stack is a generic non thread-safe LIFO stack implementation.
 type Stack[T any] struct {
 	elements []T
 }
@@ -10,7 +10,7 @@ func NewStack[T any]() *Stack[T] {
 	return &Stack[T]{}
 }
 
-// NewStackWithCapacity creates a new stack with the specified capacity.
+// NewStackWithCapacity creates a new stack with the specified initial capacity.
 func NewStackWithCapacity[T any](capacity int) *Stack[T] {
 	return &Stack[T]{
 		elements: make([]T, 0, capacity),
@@ -37,12 +37,11 @@ func (s *Stack[T]) Cap() int {
 	return cap(s.elements)
 }
 
-// Peek returns the top element of the stack and a boolean indicating if the
-// operation was successful.
+// Peek returns the top element of the stack (without removing it)
+// and a boolean indicating if the operation was successful.
 func (s *Stack[T]) Peek() (T, bool) {
-	var result T
-
 	if len(s.elements) == 0 {
+		var result T
 		return result, false
 	}
 
@@ -52,14 +51,13 @@ func (s *Stack[T]) Peek() (T, bool) {
 // Pop removes and returns the top element of the stack and a boolean indicating
 // if the operation was successful.
 func (s *Stack[T]) Pop() (T, bool) {
-	var result T
-
 	if len(s.elements) == 0 {
+		var result T
 		return result, false
 	}
 
 	endIndex := len(s.elements) - 1
-	result = s.elements[endIndex]
+	result := s.elements[endIndex]
 	s.elements = s.elements[:endIndex]
 	return result, true
 }
