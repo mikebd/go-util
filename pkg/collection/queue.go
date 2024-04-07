@@ -62,6 +62,10 @@ func (q *Queue[T]) Remove() (T, bool) {
 	}
 
 	result := q.elements[0]
+	// TODO: Confirm whether this is necessary to prevent a memory leak:
+	// var zero T
+	// q.elements[0] = zero
+	// ... if so, also confirm for Stack.Pop()
 	q.elements = q.elements[1:]
 	return result, true
 }
