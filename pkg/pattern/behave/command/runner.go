@@ -62,11 +62,11 @@ func (r *Runner) prometheusEnabled() bool {
 // injecting observability calls as required by the Runner configuration
 func (r *Runner) Run(subsystem string, cmdName string, cmd Command, args ...string) error {
 	if !r.prometheusEnabled() {
-		return cmd(args...)
+		return cmd(args)
 	}
 
 	// TODO: Prometheus...
-	result := cmd(args...)
+	result := cmd(args)
 	return result
 }
 
