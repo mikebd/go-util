@@ -1,8 +1,9 @@
 package git
 
 import (
-	"os"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestCurrentBranchName(t *testing.T) {
@@ -39,14 +40,13 @@ func TestCurrentBranchName(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := CurrentBranchName(tt.args.globalOptions...)
-			if (err != nil) != tt.wantErr {
-				pwd, _ := os.Getwd()
-				t.Errorf("CurrentBranchName() pwd = %v, error = %v, wantErr %v", pwd, err, tt.wantErr)
-				return
+			if tt.wantErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
 			}
-			if got != tt.want && err == nil {
-				pwd, _ := os.Getwd()
-				t.Errorf("CurrentBranchName() pwd = %v, got = %v, want %v", pwd, got, tt.want)
+			if err == nil {
+				assert.Equal(t, tt.want, got)
 			}
 		})
 	}

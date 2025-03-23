@@ -1,11 +1,12 @@
 package git
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
-func Test_options(t *testing.T) {
+func TestOptions(t *testing.T) {
 	type args struct {
 		globalOptions  []GlobalOptions
 		commandOptions []string
@@ -48,14 +49,13 @@ func Test_options(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := options(tt.args.globalOptions, tt.args.commandOptions...); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("options() = %v, want %v", got, tt.want)
-			}
+			got := options(tt.args.globalOptions, tt.args.commandOptions...)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
-func TestGlobalOptions_count(t *testing.T) {
+func TestGlobalOptionsCount(t *testing.T) {
 	type fields struct {
 		AsIfIn string
 		GitDir string
@@ -78,14 +78,12 @@ func TestGlobalOptions_count(t *testing.T) {
 				AsIfIn: tt.fields.AsIfIn,
 				GitDir: tt.fields.GitDir,
 			}
-			if got := g.count(); got != tt.want {
-				t.Errorf("count() = %v, want %v", got, tt.want)
-			}
+			assert.Equal(t, tt.want, g.count())
 		})
 	}
 }
 
-func TestGlobalOptions_empty(t *testing.T) {
+func TestGlobalOptionsEmpty(t *testing.T) {
 	type fields struct {
 		AsIfIn string
 		GitDir string
@@ -108,9 +106,7 @@ func TestGlobalOptions_empty(t *testing.T) {
 				AsIfIn: tt.fields.AsIfIn,
 				GitDir: tt.fields.GitDir,
 			}
-			if got := g.empty(); got != tt.want {
-				t.Errorf("empty() = %v, want %v", got, tt.want)
-			}
+			assert.Equal(t, tt.want, g.empty())
 		})
 	}
 }
