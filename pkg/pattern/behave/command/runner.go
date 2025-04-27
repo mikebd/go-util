@@ -1,6 +1,7 @@
 package command
 
 import (
+	"fmt"
 	"log"
 	"strings"
 	"sync"
@@ -60,13 +61,17 @@ func (r *Runner) prometheusEnabled() bool {
 
 // Run executes the Command with the given name and arguments,
 // injecting observability calls as required by the Runner configuration
-func (r *Runner) Run(subsystem string, cmdName string, cmd Command, args ...string) error {
+func (r *Runner) Run(registry *Registry, cmdName string, args ...string) error {
+	if registry == nil {
+		return fmt.Errorf("nil registry")
+	}
+
 	if !r.prometheusEnabled() {
-		return cmd(args)
+		return registry.run(cmdName, args)
 	}
 
 	// TODO: Prometheus...
-	result := cmd(args)
+	result := registry.run(cmdName, args)
 	return result
 }
 

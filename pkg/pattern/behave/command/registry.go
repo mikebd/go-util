@@ -41,7 +41,7 @@ func (r *Registry) Name() string {
 }
 
 // Run executes a command by name
-func (r *Registry) Run(cmdName string, args []string) error {
+func (r *Registry) run(cmdName string, args []string) error {
 	cmd, ok := r.commands[cmdName]
 	if !ok {
 		return fmt.Errorf("command registry %s, missing command: %s", r.name, cmdName)

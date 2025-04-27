@@ -40,7 +40,7 @@ func TestRegistryRun(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.commandName, func(t *testing.T) {
-			err := r.Run(tt.commandName, nil)
+			err := r.run(tt.commandName, nil)
 			assert.Equal(t, tt.wantErr, err)
 		})
 	}
