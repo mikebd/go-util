@@ -7,6 +7,9 @@ import (
 )
 
 func TestCurrentBranchName(t *testing.T) {
+	// Change this on other branches, but do not merge, to eliminate noise
+	const currentBranch = "master"
+
 	type args struct {
 		globalOptions []GlobalOptions
 	}
@@ -17,20 +20,20 @@ func TestCurrentBranchName(t *testing.T) {
 		wantErr bool
 	}{
 		// Should always fail:
-		{"GitDir=.", args{[]GlobalOptions{{GitDir: "."}}}, "master", true},
-		{"GitDir=../../", args{[]GlobalOptions{{GitDir: "../../"}}}, "master", true},
+		{"GitDir=.", args{[]GlobalOptions{{GitDir: "."}}}, currentBranch, true},
+		{"GitDir=../../", args{[]GlobalOptions{{GitDir: "../../"}}}, currentBranch, true},
 
 		// Should always succeed when the current branch is master:
-		{"no global options", args{}, "master", false},
-		{"empty global options", args{[]GlobalOptions{}}, "master", false},
-		{"AsIfIn=.", args{[]GlobalOptions{{AsIfIn: "."}}}, "master", false},
-		{"AsIfIn=..", args{[]GlobalOptions{{AsIfIn: ".."}}}, "master", false},
-		{"AsIfIn=../..", args{[]GlobalOptions{{AsIfIn: "../.."}}}, "master", false},
-		{"GitDir=../../.git", args{[]GlobalOptions{{GitDir: "../../.git"}}}, "master", false},
+		{"no global options", args{}, currentBranch, false},
+		{"empty global options", args{[]GlobalOptions{}}, currentBranch, false},
+		{"AsIfIn=.", args{[]GlobalOptions{{AsIfIn: "."}}}, currentBranch, false},
+		{"AsIfIn=..", args{[]GlobalOptions{{AsIfIn: ".."}}}, currentBranch, false},
+		{"AsIfIn=../..", args{[]GlobalOptions{{AsIfIn: "../.."}}}, currentBranch, false},
+		{"GitDir=../../.git", args{[]GlobalOptions{{GitDir: "../../.git"}}}, currentBranch, false},
 		{
 			"AsIfIn=.. GitDir=../.git",
 			args{[]GlobalOptions{{AsIfIn: "..", GitDir: "../.git"}}},
-			"master",
+			currentBranch,
 			false,
 		},
 
