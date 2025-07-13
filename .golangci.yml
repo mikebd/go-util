@@ -1,0 +1,66 @@
+version: "2"
+
+run:
+  timeout: 5m
+  tests: true
+
+formatters:
+  enable:
+    - goimports
+
+output:
+  sort-order:
+    - file
+    - severity
+    - linter
+
+linters:
+  enable:
+    - bodyclose
+    - depguard
+    - dupl
+    - embeddedstructfieldcheck
+    - err113
+    - errorlint
+    - exptostd
+    - fatcontext
+    - gocheckcompilerdirectives
+    - gochecknoinits
+    - goconst
+    - gocritic
+    - gocyclo
+    - goprintffuncname
+    - gosec
+    - iface
+    - inamedparam
+    - interfacebloat
+    - intrange
+    - ireturn
+    - nakedret
+    - noctx
+    - nolintlint
+    - nosprintfhostport
+    - paralleltest
+    - perfsprint
+    - prealloc
+    - predeclared
+    - promlinter
+    - protogetter
+    - recvcheck
+    - revive
+    - rowserrcheck
+    - sloglint
+    - spancheck
+    - sqlclosecheck
+    - tagalign
+    - tagliatelle
+    - testifylint
+    - testpackage
+    - thelper
+    - tparallel
+    - unconvert
+    - usestdlibvars
+    - usetesting
+    - wastedassign
+    - whitespace
+    - wrapcheck
