@@ -22,5 +22,6 @@ go.work
 
 .idea/
 .editorconfig
+.tool-versions
 
 go-util
