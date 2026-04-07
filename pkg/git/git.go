@@ -28,7 +28,7 @@ func Fetch(remote string, branch string, globalOptions ...GlobalOptions) error {
 // IsBehindRemote returns true if the specified branch is behind the specified remote
 // for the repository in the current working directory.
 func IsBehindRemote(remote string, branch string, globalOptions ...GlobalOptions) (bool, error) {
-	fetchErr := Fetch(remote, branch)
+	fetchErr := Fetch(remote, branch, globalOptions...)
 	if fetchErr != nil {
 		return false, fetchErr
 	}
