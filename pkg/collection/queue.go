@@ -19,6 +19,10 @@ func NewQueueWithCapacity[T any](capacity int) *Queue[T] {
 
 // Clear removes all elements from the queue.
 func (q *Queue[T]) Clear() {
+	var zero T
+	for index := range q.elements {
+		q.elements[index] = zero
+	}
 	q.elements = q.elements[:0]
 }
 
@@ -62,10 +66,8 @@ func (q *Queue[T]) Remove() (T, bool) {
 	}
 
 	result := q.elements[0]
-	// TODO: Confirm whether this is necessary to prevent a memory leak:
-	// var zero T
-	// q.elements[0] = zero
-	// ... if so, also confirm for Stack.Pop()
+	var zero T
+	q.elements[0] = zero
 	q.elements = q.elements[1:]
 	return result, true
 }
