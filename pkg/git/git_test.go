@@ -58,8 +58,12 @@ func TestIsBehindRemoteUsesGlobalOptionsForFetch(t *testing.T) {
 }
 
 func TestCurrentBranchName(t *testing.T) {
-	// Change this on other branches, but do not merge, to eliminate noise
-	const currentBranch = "master"
+	t.Parallel()
+
+	currentBranch, err := CurrentBranchName()
+	if !assert.NoError(t, err) {
+		return
+	}
 
 	type args struct {
 		globalOptions []GlobalOptions
@@ -74,7 +78,7 @@ func TestCurrentBranchName(t *testing.T) {
 		{"GitDir=.", args{[]GlobalOptions{{GitDir: "."}}}, currentBranch, true},
 		{"GitDir=../../", args{[]GlobalOptions{{GitDir: "../../"}}}, currentBranch, true},
 
-		// Should always succeed when the current branch is master:
+		// Should succeed and resolve to the current branch in this repo:
 		{"no global options", args{}, currentBranch, false},
 		{"empty global options", args{[]GlobalOptions{}}, currentBranch, false},
 		{"AsIfIn=.", args{[]GlobalOptions{{AsIfIn: "."}}}, currentBranch, false},
@@ -89,17 +93,17 @@ func TestCurrentBranchName(t *testing.T) {
 		},
 
 		// Exploratory tests - do not commit these uncommented, not portable:
-		// {"gitDir=fully qualified ./", args{[]GlobalOptions{{GitDir: "/Users/michael.ben-david/mikebd/go-util"}}}, "master", false},
+		// {"gitDir=fully qualified ./", args{[]GlobalOptions{{GitDir: "/Users/michael.ben-david/mikebd/go-util"}}}, currentBranch, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := CurrentBranchName(tt.args.globalOptions...)
+			got, gotErr := CurrentBranchName(tt.args.globalOptions...)
 			if tt.wantErr {
-				assert.Error(t, err)
+				assert.Error(t, gotErr)
 			} else {
-				assert.NoError(t, err)
+				assert.NoError(t, gotErr)
 			}
-			if err == nil {
+			if gotErr == nil {
 				assert.Equal(t, tt.want, got)
 			}
 		})
