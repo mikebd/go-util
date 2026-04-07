@@ -19,6 +19,10 @@ func NewStackWithCapacity[T any](capacity int) *Stack[T] {
 
 // Clear removes all elements from the stack.
 func (s *Stack[T]) Clear() {
+	var zero T
+	for index := range s.elements {
+		s.elements[index] = zero
+	}
 	s.elements = s.elements[:0]
 }
 
@@ -58,6 +62,8 @@ func (s *Stack[T]) Pop() (T, bool) {
 
 	endIndex := len(s.elements) - 1
 	result := s.elements[endIndex]
+	var zero T
+	s.elements[endIndex] = zero
 	s.elements = s.elements[:endIndex]
 	return result, true
 }
